@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\V1;
 
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
@@ -9,12 +9,12 @@ use App\Models\User;
 class UserRepository
 {
 
-    public function getAllUsers()
+    public function index()
     {
         return User::all();
     }
 
-    public function find($id)
+    public function show(string $id)
     {
         return User::find($id);
     }
@@ -24,14 +24,14 @@ class UserRepository
         return User::create($user->validated());
     }
 
-    public function update($id, UpdateUserRequest $request)
+    public function update(UpdateUserRequest $request, string $id)
     {
         $user = User::findOrFail($id);
         $user->update($request->validated());
         return $user;
     }
 
-    public function delete($id)
+    public function delete(string $id)
     {
         $user = User::find($id);
         if (!$user) return false;

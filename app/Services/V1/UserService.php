@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\V1;
 
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
-use App\Repositories\UserRepository;
+use App\Repositories\V1\UserRepository;
 
 class UserService
 {
@@ -15,10 +15,10 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    public function getAllUsers()
+    public function index()
     {
         try {
-            $users = $this->userRepository->getAllUsers();
+            $users = $this->userRepository->index();
 
             if($users->isEmpty()) {
                 return response()->json([
@@ -38,10 +38,10 @@ class UserService
         }
     }
 
-    public function find($id)
+    public function show(string $id)
     {
         try {
-            $user = $this->userRepository->find($id);
+            $user = $this->userRepository->show($id);
             if (!$user) {
                 return response()->json([
                     'message' => 'User not found',
@@ -60,10 +60,10 @@ class UserService
         }
     }
 
-    public function store(StoreUserRequest $user)
+    public function store(StoreUserRequest $request)
     {
         try {
-            return $this->userRepository->store($user);
+            $user = $this->userRepository->store($request);
             return response()->json([
                 'message' => 'User created successfully',
                 'user' => $user
@@ -76,11 +76,11 @@ class UserService
         }
     }
 
-    public function update($id, UpdateUserRequest $user)
+    public function update(UpdateUserRequest $request, string $id)
     {
         try {
-            $this->userRepository->update($id, $user);
-            if (!$user) {
+           $user = $this->userRepository->update($request, $id);
+            if (!$request) {
                 return response()->json([
                     'message' => 'User not found',
                 ], 404);
@@ -98,7 +98,7 @@ class UserService
         }
     }
 
-    public function delete($id)
+    public function delete(string $id)
     {
         $deleted = $this->userRepository->delete($id);
 

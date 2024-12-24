@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\V1;
 
 use App\Http\Requests\Auth\LoginAuthRequest;
 use App\Http\Requests\Auth\RegisterAuthRequest;
 use App\Models\User;
-use App\Repositories\AuthRepository;
+use App\Repositories\V1\AuthRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 

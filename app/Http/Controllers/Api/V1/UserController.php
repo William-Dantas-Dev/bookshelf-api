@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\V1;
+
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
-use App\Services\UserService;
-use Illuminate\Http\Request;
+use App\Services\V1\UserService;
 
 class UserController extends Controller
 {
@@ -23,15 +23,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return $this->userService->getAllUsers();
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        return $this->userService->find($id);
+        return $this->userService->index();
     }
 
     /**
@@ -43,11 +35,19 @@ class UserController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        return $this->userService->show($id);
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(UpdateUserRequest $request, string $id)
     {
-        return $this->userService->update($id, $request);    
+        return $this->userService->update($request, $id);
     }
 
     /**
