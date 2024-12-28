@@ -22,8 +22,8 @@ class UpdateGenreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string|max:255',
-            'description' => 'string',
+            'name' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string',
         ];
     }
 }

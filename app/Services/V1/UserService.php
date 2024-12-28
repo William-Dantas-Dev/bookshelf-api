@@ -2,6 +2,7 @@
 
 namespace App\Services\V1;
 
+use App\DTO\UserDTO;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Repositories\V1\UserRepository;
@@ -17,98 +18,26 @@ class UserService
 
     public function index()
     {
-        try {
-            $users = $this->userRepository->index();
-
-            if($users->isEmpty()) {
-                return response()->json([
-                    'message' => 'No users found',
-                ], 404);
-            }
-
-            return response()->json([
-                'message' => 'Users retrieved successfully',
-                'users' => $users,
-            ], 200);
-        } catch(\Exception $e) {
-            return response()->json([
-                'message' => 'Error retrieving users',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return $this->userRepository->index();
     }
 
     public function show(string $id)
     {
-        try {
-            $user = $this->userRepository->show($id);
-            if (!$user) {
-                return response()->json([
-                    'message' => 'User not found',
-                ], 404);
-            }
-
-            return response()->json([
-                'message' => 'User retrieved successfully',
-                'user' => $user,
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error retrieving user',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return $this->userRepository->show($id);
     }
 
-    public function store(StoreUserRequest $request)
+    public function store(UserDTO $userDTO)
     {
-        try {
-            $user = $this->userRepository->store($request);
-            return response()->json([
-                'message' => 'User created successfully',
-                'user' => $user
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error creating user',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return $this->userRepository->store($userDTO);
     }
 
-    public function update(UpdateUserRequest $request, string $id)
+    public function update(UserDTO $userDTO, string $id)
     {
-        try {
-           $user = $this->userRepository->update($request, $id);
-            if (!$request) {
-                return response()->json([
-                    'message' => 'User not found',
-                ], 404);
-            }
-
-            return response()->json([
-                'message' => 'User updated successfully',
-                'user' => $user
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error updating user',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return $this->userRepository->update($userDTO, $id);
     }
 
-    public function delete(string $id)
+    public function destroy(string $id)
     {
-        $deleted = $this->userRepository->delete($id);
-
-        if ($deleted) {
-            return response()->json([
-                'message' => 'User deleted successfully.',
-            ], 200);
-        }
-        return response()->json([
-            'message' => 'Error trying to delete user.',
-        ], 400);
+        return $this->userRepository->destroy($id);
     }
 }

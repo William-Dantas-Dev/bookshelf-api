@@ -46,7 +46,27 @@ class User extends Authenticatable
         ];
     }
 
-    public function posts(){
-        return $this->hasMany(Post::class);
+    public function bookReadingStatus()
+    {
+        return $this->hasMany(BookReadingStatus::class);
+    }
+
+    public function book(){
+        return $this->hasMany(Book::class);
+    }
+
+    public function review()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function comment_replies()
+    {
+        return $this->hasMany(CommentReply::class);
+    }
+
+    public function saved_books()
+    {
+        return $this->belongsToMany(Book::class, 'saved_books')->withTimestamps();
     }
 }

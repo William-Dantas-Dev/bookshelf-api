@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Contracts\Book\BookControllerContract;
+use App\DTO\BookDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Book\StoreBookRequest;
 use App\Http\Requests\Book\UpdateBookRequest;
 use App\Services\V1\BookService;
-use Illuminate\Http\Request;
 
-class BookController extends Controller
+class BookController extends Controller implements BookControllerContract
 {
     protected $bookService;
 
@@ -16,43 +17,94 @@ class BookController extends Controller
     {
         $this->bookService = $bookService;
     }
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        return $this->bookService->index();
+        try {
+            $books = $this->bookService->index();
+            if ($books->isEmpty()) {
+                return response()->json([
+                    'message' => 'No Books found',
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Books retrieved successfully',
+                'books' => $books,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error retrieving Books',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreBookRequest $request)
-    {
-        return $this->bookService->store($request);
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        return $this->bookService->show($id);
+        try {
+            $book = $this->bookService->show($id);
+            if (!$book) {
+                return response()->json([
+                    'message' => 'Book not found',
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Book retrieved successfully',
+                'book' => $book,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error retrieving Book',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    public function store(StoreBookRequest $request)
+    {
+        try {
+            $book = $this->bookService->store(BookDTO::fromArray($request->all()));
+            return response()->json([
+                'message' => 'Book created successfully',
+                'book' => $book,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error creating book',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function update(UpdateBookRequest $request, string $id)
     {
-        return $this->bookService->update($id, $request);
+        try {
+            $book = $this->bookService->update(BookDTO::fromArray($request->all()), $id);
+            return response()->json([
+                'message' => 'Book updated successfully',
+                'book' => $book,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error updating book',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        return $this->bookService->delete($id);
+        $deleted = $this->bookService->destroy($id);
+
+        if ($deleted) {
+            return response()->json([
+                'message' => 'Book deleted successfully.',
+            ], 200);
+        }
+        return response()->json([
+            'message' => 'Error trying to delete book.',
+        ], 400);
     }
 }

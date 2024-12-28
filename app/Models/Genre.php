@@ -14,6 +14,10 @@ class Genre extends Model
         'description',
     ];
 
+    protected $hidden = [
+        'pivot',
+    ];
+
     public function books()
     {
         return $this->belongsToMany(Book::class);

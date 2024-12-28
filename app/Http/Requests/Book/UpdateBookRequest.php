@@ -23,12 +23,12 @@ class UpdateBookRequest extends FormRequest
     {
         return [
             'title' => 'sometimes|string|max:255',
-            'author' => 'sometimes|string|max:255',
+            'author_id' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
             'coverImage' => 'nullable|string|url',
             'publicationDate' => 'sometimes|date',
-            'genres' => 'sometimes|array',
-            'genres.*' => 'exists:genres,id',
+            'genres_id' => 'sometimes|array',
+            'genres_id.*' => 'exists:genres,id',
         ];
     }
 }

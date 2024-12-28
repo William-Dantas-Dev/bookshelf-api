@@ -2,11 +2,11 @@
 
 namespace App\Repositories\V1;
 
-use App\Http\Requests\Genre\StoreGenreRequest;
-use App\Http\Requests\Genre\UpdateGenreRequest;
+use App\Contracts\Genre\GenreRepositoryContract;
+use App\DTO\GenreDTO;
 use App\Models\Genre;
 
-class GenreRepository
+class GenreRepository implements GenreRepositoryContract
 {
 
     public function index()
@@ -19,22 +19,22 @@ class GenreRepository
         return Genre::findOrFail($id);
     }
 
-    public function store(StoreGenreRequest $request)
+    public function store(GenreDTO $genreDTO)
     {
-        return Genre::create($request->validated());
+        return Genre::create($genreDTO->toArray());
     }
 
-    public function update(UpdateGenreRequest $request, string $id)
+    public function update(GenreDTO $genreDTO, string $id)
     {
         $genre = Genre::findOrFail($id);
-        $genre->update($request->validated());
+        $genre->update($genreDTO->toArray());
         return $genre;
     }
 
-    public function delete(string $id)
+    public function destroy(string $id)
     {
         $genre = Genre::findOrFail($id);
-        if(!$genre) return false;
+        if (!$genre) return false;
         return $genre->delete();
     }
 }

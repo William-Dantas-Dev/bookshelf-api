@@ -2,28 +2,23 @@
 
 namespace App\Repositories\V1;
 
-use App\Http\Requests\Auth\RegisterAuthRequest;
+use App\Contracts\Author\AuthRepositoryContract;
+use App\DTO\AuthDTO;
 use App\Models\User;
-use Illuminate\Http\Request;
 
-class AuthRepository
+class AuthRepository implements AuthRepositoryContract
 {
-    public function register(RegisterAuthRequest $request)
+    public function register(AuthDTO $authDTO)
     {
-        return User::create($request->validated());
+        return User::create($authDTO->toArray());
     }
-
 
     public function login(User $user)
     {
         return $user->createToken($user->name);
     }
 
-    public function logout(Request $request) {
-        $request->user()->tokens()->delete();
-
-        return [
-            'message' => 'You are logouted'
-        ];
+    public function logout(User $user) {
+        return $user->tokens()->delete();
     }
 }

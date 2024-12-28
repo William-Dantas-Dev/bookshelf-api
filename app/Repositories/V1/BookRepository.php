@@ -2,46 +2,46 @@
 
 namespace App\Repositories\V1;
 
-use App\Http\Requests\Book\StoreBookRequest;
-use App\Http\Requests\Book\UpdateBookRequest;
+use App\Contracts\Book\BookRepositoryContract;
+use App\DTO\BookDTO;
 use App\Models\Book;
 
-class BookRepository
+class BookRepository implements BookRepositoryContract
 {
 
     public function index()
     {
-        return Book::all();
+        return Book::all()->load('author', 'user', 'genres', 'tags', 'saved_by');
     }
 
     public function show(string $id)
     {
-        return Book::findOrFail($id);
+        return Book::findOrFail($id)->load('author', 'user', 'genres', 'tags', 'saved_by');
     }
 
-    public function store(StoreBookRequest $request)
+    public function store(BookDTO $bookDTO)
     {
-        $book = Book::create($request->validated());
-
-        // Sincronizar os gêneros
-        $book->genres()->sync($request->input('genres'));
-
-        return $book->load('genres');
+        $book = Book::create($bookDTO->toArray());
+        $book->genres()->sync($bookDTO->genres_id);
+        return $book->load('author', 'user', 'genres', 'tags', 'saved_by');
     }
 
-    public function update(UpdateBookRequest $request, string $id)
+    public function update(BookDTO $bookDTO, string $id)
     {
         $book = Book::findOrFail($id);
-        $book->update($request->validated());
+        $book->update($bookDTO->toArray());
 
-        if($request->has('genres')){
-            $book->genres()->sync($request->input('genres'));
+        if($bookDTO->genres_id){
+            $book->genres()->sync($bookDTO->genres_id);
+        }
+        if($bookDTO->tags_id){
+            $book->tags()->sync($bookDTO->tags_id);
         }
 
-        return $book->load('genres');
+        return $book->load('author', 'user', 'genres', 'tags', 'saved_by');
     }
 
-    public function delete(string $id)
+    public function destroy(string $id)
     {
         $book = Book::findOrFail($id);
         if (!$book) return false;

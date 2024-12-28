@@ -2,8 +2,7 @@
 
 namespace App\Repositories\V1;
 
-use App\Http\Requests\User\StoreUserRequest;
-use App\Http\Requests\User\UpdateUserRequest;
+use App\DTO\UserDTO;
 use App\Models\User;
 
 class UserRepository
@@ -19,23 +18,23 @@ class UserRepository
         return User::find($id);
     }
 
-    public function store(StoreUserRequest $user)
+    public function store(UserDTO $user)
     {
-        return User::create($user->validated());
+        return User::create($user->toArray());
     }
 
-    public function update(UpdateUserRequest $request, string $id)
+    public function update(UserDTO $user, string $id)
     {
         $user = User::findOrFail($id);
-        $user->update($request->validated());
+        $user->update($user->toArray());
         return $user;
     }
 
-    public function delete(string $id)
+    public function destroy(string $id)
     {
         $user = User::find($id);
         if (!$user) return false;
 
-        return $user->delete();
+        return $user->destroy();
     }
 }
