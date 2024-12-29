@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Contracts\User\AuthControllerContract;
+use App\Contracts\Auth\AuthControllerContract;
 use App\DTO\AuthDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginAuthRequest;
@@ -26,21 +26,22 @@ class AuthController extends Controller implements AuthControllerContract
 
             if ($user) {
                 return response()->json([
-                    'message' => 'Usuário registrado com sucesso.',
+                    'message' => 'User registered successfully.',
                     'user' => $user
                 ], 201);
             } else {
                 return response()->json([
-                    'message' => 'Falha ao registrar o usuário.'
+                    'message' => 'Failed to register user.'
                 ], 400);
             }
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Erro ao registrar usuário.',
+                'message' => 'Error registering user.',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
+
     public function login(LoginAuthRequest $request)
     {
         try {

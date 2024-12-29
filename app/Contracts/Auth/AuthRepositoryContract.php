@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts\Author;
+namespace App\Contracts\Auth;
 
 use App\DTO\AuthDTO;
 use App\Models\User;

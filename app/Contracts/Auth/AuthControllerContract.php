@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts\User;
+namespace App\Contracts\Auth;
 
 use App\Http\Requests\Auth\LoginAuthRequest;
 use App\Http\Requests\Auth\RegisterAuthRequest;

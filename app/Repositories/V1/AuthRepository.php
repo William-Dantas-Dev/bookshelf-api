@@ -2,7 +2,7 @@
 
 namespace App\Repositories\V1;
 
-use App\Contracts\Author\AuthRepositoryContract;
+use App\Contracts\Auth\AuthRepositoryContract;
 use App\DTO\AuthDTO;
 use App\Models\User;
 
