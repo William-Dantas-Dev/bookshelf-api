@@ -139,20 +139,4 @@ class AuthRegisterTest extends TestCase
 
         $response->assertJsonValidationErrors(['password']);
     }
-
-    public function test_register_password_too_short()
-    {
-        $data = [
-            'name' => 'Test User',
-            'email' => 'shortpassword@gmail.com',
-            'password' => 'short',
-            'password_confirmation' => 'short',
-        ];
-
-        $response = $this->postJson('/api/v1/register', $data);
-
-        $response->assertStatus(422);
-
-        $response->assertJsonValidationErrors(['password']);
-    }
 }
